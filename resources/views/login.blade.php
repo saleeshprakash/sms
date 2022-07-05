@@ -6,12 +6,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="author" content="saleeshprakash">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf_token" content="{{ csrf_token() }}">
     <title>Student Management System</title>
 
     <!-- vendor css -->
-    <link href="{{asset('/')}}/lib/font-awesome/css/font-awesome.css" rel="stylesheet">
-    <link href="{{asset('/')}}/lib/Ionicons/css/ionicons.css" rel="stylesheet">
+    <link href="{{asset('/')}}lib/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="{{asset('/')}}lib/Ionicons/css/ionicons.css" rel="stylesheet">
 
     <!-- Bracket CSS -->
     <link rel="stylesheet" href="../css/bracket.css">
@@ -32,13 +32,15 @@
                     <input id="input-password" type="password" class="form-control" placeholder="Enter your password" name="password">
                 </div>
                 <button type="submit" class="btn btn-info btn-block">Sign In</button>
+                <div class="mt-2" id="panel-message">
+                </div>
             </div>
         </form>
     </div>
 
-    <script src="{{asset('/')}}/lib/jquery/jquery.js"></script>
-    <script src="{{asset('/')}}/lib/popper.js/popper.js"></script>
-    <script src="{{asset('/')}}/lib/bootstrap/bootstrap.js"></script>
+    <script src="{{asset('/')}}lib/jquery/jquery.js"></script>
+    <script src="{{asset('/')}}lib/popper.js/popper.js"></script>
+    <script src="{{asset('/')}}lib/bootstrap/bootstrap.js"></script>
     <script src="{{asset('/')}}js/jquery.validate.min.js"></script>
 
     <script type="text/javascript">
@@ -76,10 +78,26 @@
                     },
                     success: function(data) {
                         console.log(data);
+                        if (data.status === false) {
+                            $('#panel-message').html(`<div class="alert alert-danger">Invalid login credentials!</div>`).trigger('clearAfterSomeTimes');
+                        } else {
+                            window.location.href = "{{route('dashboard')}}";
+                        }
+
                     }
                 })
+            },
+            error: function(error) {
+                $('#panel-message').html(`<div class="alert alert-danger">Invalid login credentials!</div>`).trigger('clearAfterSomeTimes');
             }
         });
+
+        $('#panel-message').on('clearAfterSomeTimes', (e) => {
+            e.preventDefault();
+            setTimeout(() => {
+                $('#panel-message').html(``);
+            }, 6000)
+        })
     </script>
 </body>
 
